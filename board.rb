@@ -1,4 +1,5 @@
-require './tile.rb'
+require 'colorize'
+require_relative 'tile.rb'
 require 'byebug'
 
 class Board
@@ -13,7 +14,7 @@ class Board
 
   def display
     header = (0...size).to_a.join(" ")
-    p "  #{header}"
+    puts "  #{header}".colorize(:blue)
     self.grid.each_with_index do |row, i|
       display_row(row, i)
     end
@@ -22,7 +23,7 @@ class Board
 
   def display_row(row, i)
     tiles = row.map { |tile, i| tile.reveal }.join(" ")
-    p "#{i} #{tiles}"
+    puts "#{i.to_s.colorize(:blue)} #{tiles}"
   end
 
   def populate
@@ -42,24 +43,49 @@ class Board
   end
 
   def is_bomb?(pos)
-    self[[pos]].bomb
+    self[pos].bomb
   end
 
-  def find_neighbor_bombs(pos)
+  def find_bomb_count(pos)
     total_bombs = 0
 
     (-1..1).each do |x_offset|
       (-1..1).each do |y_offset|
         x = x_offset + pos[0]
         y = y_offset + pos[1]
-        if pos_on_board?([x, y])
-          total_bombs += 1 if self[[x, y]].bomb
+        if pos_on_board?([x, y]) && self[[x, y]].bomb
+         total_bombs += 1
         end
       end
     end
 
     total_bombs
   end
+
+
+  # def find_bomb_locations(pos)
+  #   bomb_placements = []
+  #
+  #   (-1..1).each do |x_offset|
+  #     (-1..1).each do |y_offset|
+  #       x = x_offset + pos[0]
+  #       y = y_offset + pos[1]
+  #       if pos_on_board?([x, y]) && self[[x, y]].bomb
+  #        bomb_placements << [x,y]
+  #       end
+  #     end
+  #   end
+  #
+  #   bomb_placements
+  # end
+  #
+  # def find_touching_spaces(pos)
+  #   (-1..1).each do |x_offset|
+  #     (-1..1).each do |y_offset|
+  #       x = x_offset + pos[0]
+  #       y = y_offset + pos[1]
+  #       if pos_on_board?([x, y]) && !used_spaces.include?[x,y]
+  #
 
   def pos_on_board?(pos)
     pos.all? { |pos| (0...size).include?(pos) }
@@ -82,11 +108,4 @@ class Board
   end
 
   private
-end
-
-
-if __FILE__ == $PROGRAM_NAME
-  board = Board.new
-  board.populate
-  p board.find_neighbor_bombs([8,1])
 end

@@ -1,10 +1,11 @@
+
+
 class Tile
-  attr_reader :bomb, :reveal
+  attr_reader :bomb
+  attr_accessor :reveal
 
   def initialize(bomb = false)
     @bomb = bomb
-    @reveal = "*" #Options are "*","F",count,_
-
+    @reveal = "*"
   end
-
 end
