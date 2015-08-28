@@ -3,10 +3,8 @@ class Tile
 
   def initialize(bomb = false)
     @bomb = bomb
-    @reveal = "*"
+    @reveal = "*" #Options are "*","F",count,_
+
   end
 
-  def find_neighbor_bombs
-    
-  end
 end

@@ -16,6 +16,7 @@ class Board
     self.grid.each_with_index do |row, i|
       display_row(row, i)
     end
+    nil
   end
 
   def display_row(row, i)
@@ -39,12 +40,22 @@ class Board
     self[position] = tile
   end
 
-  def valid_position?(pos)
-    [-1..1].each do |x|
-      [-1..1].each do |y|
-
+  def find_neighbor_bombs(pos)
+    total_bombs = 0
+    (-1..1).each do |x_offset|
+      (-1..1).each do |y_offset|
+        x = x_offset + pos[0]
+        y = y_offset + pos[1]
+        if pos_on_board?([x, y])
+          total_bombs += 1 if self[[x, y]].bomb
+        end
       end
     end
+    total_bombs
+  end
+
+  def pos_on_board?(pos)
+    pos.all? { |pos| (0...size).include?(pos) }
   end
 
   def random_pos
@@ -64,4 +75,11 @@ class Board
   end
 
   private
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+  board = Board.new
+  board.populate
+  p board.find_neighbor_bombs([8,1])
 end
