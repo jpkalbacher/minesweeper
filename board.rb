@@ -4,10 +4,11 @@ require 'byebug'
 class Board
   attr_reader :grid, :size, :bombs
 
-  def initialize(size = 9, bombs = size**2/4)
+  def initialize(size, bombs)
     @grid = Array.new(size) { Array.new(size) }
     @size = size
     @bombs = bombs
+    populate
   end
 
   def display
@@ -40,8 +41,13 @@ class Board
     self[position] = tile
   end
 
+  def is_bomb?(pos)
+    self[[pos]].bomb
+  end
+
   def find_neighbor_bombs(pos)
     total_bombs = 0
+
     (-1..1).each do |x_offset|
       (-1..1).each do |y_offset|
         x = x_offset + pos[0]
@@ -51,6 +57,7 @@ class Board
         end
       end
     end
+
     total_bombs
   end
 
